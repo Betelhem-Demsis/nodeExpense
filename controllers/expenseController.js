@@ -1,6 +1,7 @@
 const ExpenseSchema=require('../models/expenseModel')
+const catchAsync = require('../utils/catchAsync')
 
-exports.createExpense=async(req,res)=>{
+exports.createExpense=catchAsync(async(req,res)=>{
     const {title,amount,date,catagory,description}=req.body
 
     const expense=ExpenseSchema({
@@ -10,8 +11,6 @@ exports.createExpense=async(req,res)=>{
         catagory,
         description
     })
-
-    try{
    if(!title || !amount || !date || !catagory || !description){
     return res.status(400).json({
         message:"all fields are required"
@@ -26,42 +25,24 @@ exports.createExpense=async(req,res)=>{
     await expense.save()
     res.status(200).json({
         message:"expense added successfully"
-    })
-    }    
-    catch(error){
-        res.status(500).json({
-            message:"Internal server error"
-        })
-    }
-}
+    })  
+})
 
-
-exports.getExpense=async(req,res)=>{
-    try{
+exports.getExpense=catchAsync(async(req,res)=>{
     const expense=await ExpenseSchema.find().sort({createdAt:-1})
     res.status(200).json({
         result:expense.length,
         data: expense
     })
-    }
-    catch(error){
-        res.status(500).json({
-            message:"Internal server error"
-        })
-    }
-}
+    
+})
 
-exports.deleteExpense=async(req,res)=>{
+exports.deleteExpense=catchAsync(async(req,res)=>{
     const {id}=req.params;
     ExpenseSchema.findByIdAndDelete(id).then((expense)=>{
         res.status(200).json({
             message:"expense deleted successfully"
         })
      })
-    .catch((error)=>{
-        res.status(500).json({
-            message:"expense server error"
-        })
-    })
-}
+})
 
