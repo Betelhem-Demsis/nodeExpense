@@ -1,6 +1,6 @@
+const catchAsync=require('../utils/catchAsync')
 
 
-
-const registerUser= async(req,res)=>{
+const registerUser= catchAsync(async(req,res)=>{
     
-}
+})
